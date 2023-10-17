@@ -9,7 +9,7 @@ rm -rf build
 mkdir -p build && cd build
 
 # Configure
-cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" $CMAKE_EXTRA_ARGS ..
+cmake -DCMAKE_CXX_COMPILER=/opt/homebrew/bin/g++-13 -DCMAKE_BUILD_TYPE="$BUILD_TYPE" $CMAKE_EXTRA_ARGS ..
 
 # Build
 if [[ "$OSTYPE" == "darwin"* ]]; then
