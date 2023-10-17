@@ -129,18 +129,18 @@ void Window::updateCirclePositionAndSpeedDirection() {
   auto const invalidXPosition = isCircleXPositionInvalid(newCirclePosition.x);
   auto const invalidYPosition = isCircleYPositionInvalid(newCirclePosition.y);
 
-  if (invalidXPosition) invertXSpeed();
-  if (invalidYPosition) invertYSpeed();
+  if (invalidXPosition) invertAndDecreaseXSpeed();
+  if (invalidYPosition) invertAndDecreaseYSpeed();
 
   if (!invalidXPosition && !invalidYPosition) m_circlePosition = newCirclePosition;
 }
 
-void Window::invertXSpeed() {
-  m_circleSpeed.x *= -1;
+void Window::invertAndDecreaseXSpeed() {
+  m_circleSpeed.x *= -.25;
 }
 
-void Window::invertYSpeed() {
-  m_circleSpeed.y *= -1;
+void Window::invertAndDecreaseYSpeed() {
+  m_circleSpeed.y *= -.25;
 }
 
 void Window::updateCircleSpeed() {

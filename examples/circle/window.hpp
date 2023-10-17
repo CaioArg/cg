@@ -26,8 +26,8 @@ private:
 
   void setupModel();
   void updateCirclePositionAndSpeedDirection();
-  void invertYSpeed();
-  void invertXSpeed();
+  void invertAndDecreaseXSpeed();
+  void invertAndDecreaseYSpeed();
   void updateCircleSpeed();
   void updateLastFrame();
   void updateCursor() const;
