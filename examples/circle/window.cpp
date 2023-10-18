@@ -177,8 +177,8 @@ void Window::updateCursor() const {
 }
 
 [[nodiscard]] glm::vec2 Window::getNdcCoordinates(int viewportX, int viewportY) const {
-  auto const xPercentage{(float)viewportX / ((float)m_viewportSize.x / 2)};
-  auto const yPercentage{(float)viewportY / ((float)m_viewportSize.y / 2)};
+  auto const xPercentage{(float)viewportX / ((float)m_viewportSize.x)};
+  auto const yPercentage{(float)viewportY / ((float)m_viewportSize.y)};
 
   auto const ndcX{-1 + (xPercentage * 2)};
   auto const ndcY{1 - (yPercentage * 2)};
