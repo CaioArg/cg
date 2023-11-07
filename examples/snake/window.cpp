@@ -30,6 +30,8 @@ void Window::onUpdate() {
   m_camera.truck(m_truckSpeed * deltaTime);
   m_camera.pan(m_panSpeed * deltaTime);
   m_camera.tilt(m_tiltSpeed * deltaTime);
+
+  m_game.tick();
 }
 
 void Window::onPaint() {
@@ -43,7 +45,7 @@ void Window::onPaint() {
   abcg::glUniformMatrix4fv(m_projectionMatrixLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
 
   m_snake.paint();
-  m_apple.paint();
+  m_apple.paint((float) getDeltaTime());
   m_ground.paint();
 
   abcg::glUseProgram(0);
@@ -51,6 +53,11 @@ void Window::onPaint() {
 
 void Window::onEvent(SDL_Event const &event) {
   if (event.type == SDL_KEYDOWN) {
+    if (event.key.keysym.sym == SDLK_UP) m_game.updateSnakeDirection(Direction::UP);
+    if (event.key.keysym.sym == SDLK_DOWN) m_game.updateSnakeDirection(Direction::DOWN);
+    if (event.key.keysym.sym == SDLK_LEFT) m_game.updateSnakeDirection(Direction::LEFT);
+    if (event.key.keysym.sym == SDLK_RIGHT) m_game.updateSnakeDirection(Direction::RIGHT);
+
     if (event.key.keysym.sym == SDLK_SPACE) m_pedestalSpeed = 3.0f;
     if (event.key.keysym.sym == SDLK_LSHIFT) m_pedestalSpeed = -3.0f;
     if (event.key.keysym.sym == SDLK_w) m_dollySpeed = 3.0f;

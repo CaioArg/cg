@@ -3,13 +3,19 @@
 
 #include "abcgOpenGL.hpp"
 
+#include "game.hpp"
+
 class Snake {
 public:
+  Snake(Game& game) : m_game(game) {}
+
   void create(GLuint program);
   void paint() const;
   void destroy();
 
 private:
+  Game& m_game;
+
   GLuint m_VBO{};
   GLuint m_EBO{};
   GLuint m_VAO{};
@@ -42,17 +48,6 @@ private:
 
   GLint m_modelMatrixLocation{};
   GLint m_colorLocation{};
-
-  std::vector<glm::ivec3> m_snakePositions{
-      { -5, 0, -5 },
-      { -4, 0, -5 },
-      { -3, 0, -5 },
-      { -3, 0, -4 },
-      { -3, 0, -3 },
-      { -3, 0, -2 },
-      { -3, 0, -1 },
-      { -2, 0, -1 },
-  };
 };
 
 #endif

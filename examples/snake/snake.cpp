@@ -32,9 +32,9 @@ void Snake::create(GLuint program) {
 void Snake::paint() const {
   abcg::glBindVertexArray(m_VAO);
 
-  for (auto const &position : m_snakePositions) {
+  for (auto const &position : m_game.getSnakePositions()) {
     glm::mat4 model{1.0f};
-    model = glm::translate(model, glm::vec3(position.x, 0.501f, position.z));
+    model = glm::translate(model, glm::vec3(position.x, 0.751, position.z));
 
     abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
     abcg::glUniform4f(m_colorLocation, 0.30f, 0.48f, 0.96f, 1.0f);

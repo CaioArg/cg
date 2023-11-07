@@ -3,6 +3,7 @@
 
 #include "abcgOpenGL.hpp"
 
+#include "game.hpp"
 #include "camera.hpp"
 #include "snake.hpp"
 #include "apple.hpp"
@@ -34,9 +35,10 @@ private:
   float m_panSpeed{0.0f};
   float m_tiltSpeed{0.0f};
 
-  Snake m_snake;
-  Apple m_apple;
-  Ground m_ground;
+  Game m_game;
+  Snake m_snake{m_game};
+  Apple m_apple{m_game};
+  Ground m_ground{m_game};
 };
 
 #endif

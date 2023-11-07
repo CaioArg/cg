@@ -3,13 +3,19 @@
 
 #include "abcgOpenGL.hpp"
 
+#include "game.hpp"
+
 class Apple {
 public:
+  Apple(Game& game) : m_game(game) {}
   void create(GLuint program);
-  void paint() const;
+  void paint(float deltaTime);
+  void updateAppleAnimation(float deltaTime);
   void destroy();
 
 private:
+  Game& m_game;
+
   GLuint m_VBO{};
   GLuint m_EBO{};
   GLuint m_VAO{};
@@ -20,6 +26,9 @@ private:
 
   GLint m_modelMatrixLocation{};
   GLint m_colorLocation{};
+
+  bool m_appleAnimationUp{true};
+  float m_appleAnimationTranslation{0};
 };
 
 #endif

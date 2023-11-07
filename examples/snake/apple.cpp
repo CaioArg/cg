@@ -34,11 +34,15 @@ void Apple::create(GLuint program) {
   abcg::glBindVertexArray(0);
 }
 
-void Apple::paint() const {
+void Apple::paint(float deltaTime) {
+  updateAppleAnimation(deltaTime);
+
+  auto const applePosition{m_game.getApplePosition()};
+
   abcg::glBindVertexArray(m_VAO);
 
   glm::mat4 model{1.0f};
-  model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+  model = glm::translate(model, glm::vec3(applePosition.x, 0.750f + m_appleAnimationTranslation, applePosition.z));
   model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
@@ -47,6 +51,22 @@ void Apple::paint() const {
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);
+}
+
+void Apple::updateAppleAnimation(float deltaTime) {
+  if (m_appleAnimationUp) {
+    if (m_appleAnimationTranslation > 0.2f) {
+      m_appleAnimationUp = false;
+    } else {
+      m_appleAnimationTranslation += 0.6 * deltaTime;
+    }
+  } else {
+    if (m_appleAnimationTranslation < 0.0f) {
+      m_appleAnimationUp = true;
+    } else {
+      m_appleAnimationTranslation -= 0.6 * deltaTime;
+    }
+  }
 }
 
 void Apple::destroy() {
