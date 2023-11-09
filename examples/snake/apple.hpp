@@ -29,6 +29,7 @@ private:
 
   bool m_appleAnimationUp{true};
   float m_appleAnimationTranslation{0};
+  float m_appleAnimationRotation{0};
 };
 
 #endif

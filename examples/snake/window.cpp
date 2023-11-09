@@ -3,7 +3,7 @@
 void Window::onCreate() {
   auto const &assetsPath{abcg::Application::getAssetsPath()};
 
-  abcg::glClearColor(0.74f, 0.92f, 1.0f, 1);
+  abcg::glClearColor(5.0f / 255.0f, 30.0f / 255.0f, 30.0f / 255.0f, 1);
 
   abcg::glEnable(GL_DEPTH_TEST);
 

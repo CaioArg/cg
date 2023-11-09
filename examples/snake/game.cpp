@@ -18,10 +18,18 @@ void Game::tick() {
 }
 
 void Game::updateSnakeDirection(Direction direction) {
-  if ((m_snakeDirection == Direction::UP && direction == Direction::DOWN) ||
-      (m_snakeDirection == Direction::DOWN && direction == Direction::UP) ||
-      (m_snakeDirection == Direction::LEFT && direction == Direction::RIGHT) ||
-      (m_snakeDirection == Direction::RIGHT && direction == Direction::LEFT))
+  if (m_snakePositions.size() == 1) {
+    m_snakeDirection = direction;
+    return;
+  }
+
+  auto const snakeHead{m_snakePositions.at(0)};
+  auto const snakeNeck{m_snakePositions.at(1)};
+
+  if ((direction == Direction::UP && snakeHead.x == snakeNeck.x && snakeHead.z - 1 == snakeNeck.z) ||
+      (direction == Direction::DOWN && snakeHead.x == snakeNeck.x && snakeHead.z == snakeNeck.z - 1) ||
+      (direction == Direction::LEFT && snakeHead.x - 1 == snakeNeck.x && snakeHead.z == snakeNeck.z) ||
+      (direction == Direction::RIGHT && snakeHead.x == snakeNeck.x - 1 && snakeHead.z == snakeNeck.z))
     return;
 
   m_snakeDirection = direction;
@@ -73,20 +81,22 @@ void Game::reset() {
   m_snakePositions = {{ -3, 0, 0 }};
 }
 
-bool Game::hasEatenTheApple(glm::ivec3 nexSnakePosition) {
-  return nexSnakePosition == m_applePosition;
+bool Game::hasEatenTheApple(glm::ivec3 nextSnakePosition) {
+  return nextSnakePosition == m_applePosition;
 }
 
-bool Game::hasLost(glm::ivec3 nexSnakePosition) {
-  auto const hasGoneOutOfBoard = nexSnakePosition.x > m_boardRadius ||
-                                 nexSnakePosition.x < -m_boardRadius ||
-                                 nexSnakePosition.z > m_boardRadius ||
-                                 nexSnakePosition.z < -m_boardRadius;
+bool Game::hasLost(glm::ivec3 nextSnakePosition) {
+  auto const hasGoneOutOfBoard = nextSnakePosition.x > m_boardRadius ||
+                                 nextSnakePosition.x < -m_boardRadius ||
+                                 nextSnakePosition.z > m_boardRadius ||
+                                 nextSnakePosition.z < -m_boardRadius;
 
   auto hasCrashedOnItself = false;
 
   for (auto const &position : m_snakePositions) {
-    if (position.x == nexSnakePosition.x && position.z == nexSnakePosition.z) {
+    if (position.x == nextSnakePosition.x &&
+        position.z == nextSnakePosition.z &&
+        position != m_snakePositions.back()) {
       hasCrashedOnItself = true;
     }
   }
