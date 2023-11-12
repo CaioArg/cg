@@ -64,13 +64,7 @@ void Camera::tilt(float speed) {
   transform = glm::rotate(transform, -speed, left);
   transform = glm::translate(transform, -m_eye);
 
-  auto const updatedM_at = transform * glm::vec4(m_at, 1.0f);
-
-  if (std::abs(m_eye.z - updatedM_at.z) <= 0.1) {
-    m_at = {updatedM_at.x, updatedM_at.z, m_at.z};
-  } else {
-    m_at = updatedM_at;
-  }
+  m_at = transform * glm::vec4(m_at, 1.0f);
 
   computeViewMatrix();
 }
