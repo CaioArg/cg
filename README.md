@@ -27,7 +27,7 @@ as classes descritas acima e lidar com os eventos do usuário.
 
 ### Classe Camera
 
-Representa a camêra do jogo, sendo reponsável por computar as matrizes de visão e projeção. Possui métodos para controlar
+Representa a câmera do jogo, sendo reponsável por computar as matrizes de visão e projeção. Possui métodos para controlar
 a câmera realizando os seguintes movimentos: pedestal, dolly, truck, pan e tilt.
 
 ### Classe Game
@@ -35,13 +35,13 @@ a câmera realizando os seguintes movimentos: pedestal, dolly, truck, pan e tilt
 Responsável por implementar toda a lógica do jogo. Todo o estado do jogo é armazenado nessa classe, e é constituído por:
 
 - m_applePosition: um glm::ivec3 que armazena a posição atual da maçã.
-- m_snakeDirection: um valor do tipo Direction que indica para qual posição a cobra está se locomovendo atualmente.
+- m_snakeDirection: um valor da enum Direction que indica para qual direção a cobra está se locomovendo atualmente.
 - m_snakePositions: um std::vector\<glm::ivec3\> que armazena todas as posições ocupadas pela cobra atualmente.
 
-Além de guardar o estado do jogo, possui métodos para manipular o estado atual, sempre que o usuário der um input,
+Além de guardar o estado do jogo, Game também possui métodos para atualizá-lo quando o usuário der um input
 ou quando o jogo progredir para o próximo passo. Cada passo do jogo é representado como intervalos discretos de tempo
-em que o jogo é atualizado. Isso é representado pelo método tick, que a cada utiliza um timer para saber quando o jogo
-deve ir para o próximo passo. A cada passo, é checado se o jogador perdeu, através do método hasLost, ou se comeu a maçã,
+em que o jogo é atualizado. Isso é representado pelo método tick, que utiliza um timer para saber quando o jogo deve
+seguir para o próximo passo. A cada passo, é checado se o jogador perdeu, através do método hasLost, ou se comeu a maçã,
 através do método hasEatenApple. Caso ele tenha perdido, o jogo é reiniciado através do método reset, e caso tenha comido
 a maçã, uma nova maçã é criada aleatóriamente através do método respawnApple.
 
