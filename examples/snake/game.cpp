@@ -73,9 +73,11 @@ void Game::respawnApple() {
   std::uniform_int_distribution<int> intDistribution(0, (int)emptyBoardPositions.size() - 1);
 
   m_applePosition = emptyBoardPositions[intDistribution(m_randomEngine)];
+  m_shouldAnimateAppleSpawning = true;
 }
 
 void Game::reset() {
+  m_shouldAnimateAppleSpawning = true;
   m_applePosition = {0, 0, 0};
   m_snakeDirection = Direction::RIGHT;
   m_snakePositions = {{ -3, 0, 0 }};
@@ -104,14 +106,22 @@ bool Game::hasLost(glm::ivec3 nextSnakePosition) {
   return hasGoneOutOfBoard || hasCrashedOnItself;
 }
 
-std::vector<glm::ivec3> Game::getSnakePositions() {
-  return m_snakePositions;
+int Game::getBoardRadius() {
+  return m_boardRadius;
+}
+
+bool Game::getShouldAnimateAppleSpawning() {
+  return m_shouldAnimateAppleSpawning;
+}
+
+void Game::setShouldAnimateAppleSpawning(bool shouldAnimateAppleSpawning) {
+  m_shouldAnimateAppleSpawning = shouldAnimateAppleSpawning;
 }
 
 glm::ivec3 Game::getApplePosition() {
   return m_applePosition;
 }
 
-int Game::getBoardRadius() {
-  return m_boardRadius;
+std::vector<glm::ivec3> Game::getSnakePositions() {
+  return m_snakePositions;
 }

@@ -46,7 +46,7 @@ void Apple::paint(float deltaTime) {
   glm::mat4 model{1.0f};
   model = glm::translate(model, glm::vec3(applePosition.x, 0.750f + m_appleAnimationTranslation, applePosition.z));
   model = glm::rotate(model, m_appleAnimationRotation, {0.0f, 1.0f, 0.0f});
-  model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+  model = glm::scale(model, m_appleAnimationScale * glm::vec3(0.01f));
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 0.90f, 0.27f, 0.11f, 1.0f);
@@ -58,6 +58,15 @@ void Apple::paint(float deltaTime) {
 
 void Apple::updateAppleAnimation(float deltaTime) {
   m_appleAnimationRotation += 2 * M_PI * deltaTime;
+
+  if (m_game.getShouldAnimateAppleSpawning()) {
+    m_game.setShouldAnimateAppleSpawning(false);
+    m_appleAnimationScale = 0;
+  }
+
+  if (m_appleAnimationScale < 1) {
+    m_appleAnimationScale = std::min(m_appleAnimationScale + (4 * deltaTime), 1.0f);
+  }
 
   if (m_appleAnimationUp) {
     if (m_appleAnimationTranslation > 0.2f) {

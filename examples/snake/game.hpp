@@ -18,9 +18,11 @@ public:
   bool hasEatenTheApple(glm::ivec3 nexSnakePosition);
   bool hasLost(glm::ivec3 nexSnakePosition);
 
-  std::vector<glm::ivec3> getSnakePositions();
-  glm::ivec3 getApplePosition();
   int getBoardRadius();
+  bool getShouldAnimateAppleSpawning();
+  void setShouldAnimateAppleSpawning(bool shouldAnimateAppleSpawning);
+  glm::ivec3 getApplePosition();
+  std::vector<glm::ivec3> getSnakePositions();
 
 private:
   abcg::Timer m_timer;
@@ -29,6 +31,7 @@ private:
   int const m_boardRadius{5};
   std::vector<glm::ivec3> m_allBoardPositions{};
 
+  bool m_shouldAnimateAppleSpawning{true};
   glm::ivec3 m_applePosition{0, 0, 0};
 
   Direction m_snakeDirection{Direction::RIGHT};

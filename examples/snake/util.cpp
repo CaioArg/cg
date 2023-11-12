@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include "util.hpp"
 
 struct Vertex {
