@@ -19,7 +19,6 @@ private:
   GLuint m_VBO{};
   GLuint m_EBO{};
   GLuint m_VAO{};
-  GLuint m_program{};
 
   std::array<glm::vec3, 8> m_vertices{{
        {-0.5f, -0.5f, +0.5f},
