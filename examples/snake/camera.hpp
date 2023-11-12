@@ -17,6 +17,8 @@ public:
   void pan(float speed);
   void tilt(float speed);
 
+  void reset();
+
 private:
   glm::vec3 m_eye{0.0f, 10.0f, 5.0f};
   glm::vec3 m_at{0.0f, 0.0f, 0.0f};

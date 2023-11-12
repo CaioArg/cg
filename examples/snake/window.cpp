@@ -53,6 +53,8 @@ void Window::onPaint() {
 
 void Window::onEvent(SDL_Event const &event) {
   if (event.type == SDL_KEYDOWN) {
+    if (event.key.keysym.sym == SDLK_TAB) m_camera.reset();
+
     if (event.key.keysym.sym == SDLK_UP) m_game.updateSnakeDirection(Direction::UP);
     if (event.key.keysym.sym == SDLK_DOWN) m_game.updateSnakeDirection(Direction::DOWN);
     if (event.key.keysym.sym == SDLK_LEFT) m_game.updateSnakeDirection(Direction::LEFT);
