@@ -1,3 +1,5 @@
+#include <glm/gtx/vector_angle.hpp>
+
 #include "camera.hpp"
 
 void Camera::computeViewMatrix() {
@@ -64,7 +66,15 @@ void Camera::tilt(float speed) {
   transform = glm::rotate(transform, -speed, left);
   transform = glm::translate(transform, -m_eye);
 
-  m_at = transform * glm::vec4(m_at, 1.0f);
+  glm::vec3 const newM_at = transform * glm::vec4(m_at, 1.0f);
+
+  auto const newUpAngle{glm::degrees(glm::angle(m_up, glm::normalize(newM_at - m_eye)))};
+
+  if (newUpAngle < 5 || newUpAngle > 175) {
+    return;
+  }
+
+  m_at = newM_at;
 
   computeViewMatrix();
 }
