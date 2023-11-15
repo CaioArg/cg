@@ -53,12 +53,15 @@ void Window::onPaint() {
 
 void Window::onEvent(SDL_Event const &event) {
   if (event.type == SDL_KEYDOWN) {
-    if (event.key.keysym.sym == SDLK_TAB) m_camera.reset();
+    if (m_game.getGameState() == GameState::PLAYING) {
+      if (event.key.keysym.sym == SDLK_UP) m_game.updateSnakeDirection(Direction::UP);
+      if (event.key.keysym.sym == SDLK_DOWN) m_game.updateSnakeDirection(Direction::DOWN);
+      if (event.key.keysym.sym == SDLK_LEFT) m_game.updateSnakeDirection(Direction::LEFT);
+      if (event.key.keysym.sym == SDLK_RIGHT) m_game.updateSnakeDirection(Direction::RIGHT);
+    }
 
-    if (event.key.keysym.sym == SDLK_UP) m_game.updateSnakeDirection(Direction::UP);
-    if (event.key.keysym.sym == SDLK_DOWN) m_game.updateSnakeDirection(Direction::DOWN);
-    if (event.key.keysym.sym == SDLK_LEFT) m_game.updateSnakeDirection(Direction::LEFT);
-    if (event.key.keysym.sym == SDLK_RIGHT) m_game.updateSnakeDirection(Direction::RIGHT);
+    if (event.key.keysym.sym == SDLK_ESCAPE) m_game.toggleGameState();
+    if (event.key.keysym.sym == SDLK_TAB) m_camera.reset();
 
     if (event.key.keysym.sym == SDLK_SPACE) m_pedestalSpeed = 3.0f;
     if (event.key.keysym.sym == SDLK_LSHIFT) m_pedestalSpeed = -3.0f;
@@ -85,6 +88,8 @@ void Window::onEvent(SDL_Event const &event) {
     if (event.key.keysym.sym == SDLK_f && m_tiltSpeed < 0) m_tiltSpeed = 0.0f;
   }
 }
+
+void Window::onPaintUI() {}
 
 void Window::onResize(glm::ivec2 const &size) {
   m_viewportSize = size;

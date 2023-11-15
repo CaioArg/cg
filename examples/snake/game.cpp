@@ -9,7 +9,18 @@ Game::Game() {
   }
 }
 
+void Game::toggleGameState() {
+  if (m_gameState == GameState::PLAYING) {
+    m_gameState = GameState::PAUSED;
+  } else {
+    m_gameState = GameState::PLAYING;
+    m_timer.restart();
+  }
+}
+
 void Game::tick() {
+  if (m_gameState == GameState::PAUSED) return;
+
   if (m_timer.elapsed() < .25) return;
 
   m_timer.restart();
@@ -108,6 +119,10 @@ bool Game::hasLost(glm::ivec3 nextSnakePosition) {
 
 int Game::getBoardRadius() {
   return m_boardRadius;
+}
+
+GameState Game::getGameState() {
+  return m_gameState;
 }
 
 bool Game::getShouldAnimateAppleSpawning() {

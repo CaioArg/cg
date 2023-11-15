@@ -5,11 +5,14 @@
 
 #include "abcgOpenGL.hpp"
 
+enum class GameState { PAUSED, PLAYING };
+
 enum class Direction { UP, DOWN, LEFT, RIGHT };
 
 class Game {
 public:
   Game();
+  void toggleGameState();
   void tick();
   void updateSnakeDirection(Direction direction);
   void updateSnakePosition();
@@ -19,6 +22,7 @@ public:
   bool hasLost(glm::ivec3 nexSnakePosition);
 
   int getBoardRadius();
+  GameState getGameState();
   bool getShouldAnimateAppleSpawning();
   void setShouldAnimateAppleSpawning(bool shouldAnimateAppleSpawning);
   glm::ivec3 getApplePosition();
@@ -30,6 +34,8 @@ private:
 
   int const m_boardRadius{5};
   std::vector<glm::ivec3> m_allBoardPositions{};
+
+  GameState m_gameState{GameState::PLAYING};
 
   bool m_shouldAnimateAppleSpawning{true};
   glm::ivec3 m_applePosition{0, 0, 0};

@@ -15,6 +15,7 @@ protected:
   void onUpdate() override;
   void onPaint() override;
   void onEvent(SDL_Event const &event) override;
+  void onPaintUI() override;
   void onResize(glm::ivec2 const &size) override;
   void onDestroy() override;
 
