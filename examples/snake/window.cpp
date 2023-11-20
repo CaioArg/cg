@@ -93,7 +93,7 @@ void Window::onPaintUI() {
   abcg::OpenGLWindow::onPaintUI();
 
   {
-    ImGui::SetNextWindowSize(ImVec2(100, 20));
+    ImGui::SetNextWindowSize(ImVec2(250, 100));
     ImGui::SetNextWindowPos(ImVec2(20, 20));
 
     auto const windowFlags{
@@ -104,7 +104,21 @@ void Window::onPaintUI() {
 
     ImGui::Begin("Score", nullptr, windowFlags);
 
-    ImGui::Text("Score: %lu", m_game.getSnakePositions().size() - 1);
+    auto const score{m_game.getSnakePositions().size() - 1};
+    static auto bestScore{score};
+    bestScore = score > bestScore ? score : bestScore;
+    auto const isBreakingRecords{score == bestScore && score != 0};
+
+    if (isBreakingRecords) {
+      ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 50, 255));
+    }
+
+    ImGui::Text("Score: %lu", score);
+    ImGui::Text("Best score: %lu", bestScore);
+
+    if (isBreakingRecords) {
+      ImGui::PopStyleColor();
+    }
 
     ImGui::End();
   }
