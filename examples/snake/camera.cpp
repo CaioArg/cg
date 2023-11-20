@@ -96,5 +96,7 @@ void Camera::reset() {
     m_eye = {0.0f, 14.5f, 7.25f};
   }
 
+  m_at = {0.0f, 0.0f, 0.0f};
+
   computeViewMatrix();
 }

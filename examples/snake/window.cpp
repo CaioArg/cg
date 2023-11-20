@@ -92,19 +92,37 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onPaintUI() {
   abcg::OpenGLWindow::onPaintUI();
 
+  {
+    ImGui::SetNextWindowSize(ImVec2(100, 20));
+    ImGui::SetNextWindowPos(ImVec2(20, 20));
+
+    auto const windowFlags{
+        ImGuiWindowFlags_NoInputs |
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoBackground
+    };
+
+    ImGui::Begin("Score", nullptr, windowFlags);
+
+    ImGui::Text("Score: %lu", m_game.getSnakePositions().size() - 1);
+
+    ImGui::End();
+  }
+
   if (m_game.getGameState() != GameState::PAUSED) return;
 
   ImGui::SetNextWindowSize(ImVec2(300, 200));
   ImGui::SetNextWindowPos(ImVec2((m_viewportSize.x / (m_viewportSize.x / 600) / 2) - 150, (m_viewportSize.y / (m_viewportSize.y / 600) / 2) - 100));
 
-  ImGuiWindowFlags windowFlags =
-      ImGuiWindowFlags_NoResize |
+  auto const windowFlags{
       ImGuiWindowFlags_NoMove |
+      ImGuiWindowFlags_NoResize |
       ImGuiWindowFlags_NoCollapse |
       ImGuiWindowFlags_NoScrollbar |
-      ImGuiWindowFlags_NoFocusOnAppearing;
+      ImGuiWindowFlags_NoFocusOnAppearing
+  };
 
-  ImGui::Begin("Snake", NULL, windowFlags);
+  ImGui::Begin("Snake", nullptr, windowFlags);
 
   {
     using enum GameSpeed;
@@ -150,14 +168,14 @@ void Window::onPaintUI() {
   }
 
   {
-    if (ImGui::Button("Restart game")) {
-      m_game.reset();
+    if (ImGui::Button("Reset camera")) {
+      m_camera.reset();
     }
   }
 
   {
-    if (ImGui::Button("Reset camera")) {
-      m_camera.reset();
+    if (ImGui::Button("Restart game")) {
+      m_game.reset();
     }
   }
 
