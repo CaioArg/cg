@@ -137,6 +137,7 @@ void Window::onPaintUI() {
 
         if (ImGui::Selectable(gameSizeToString(option).c_str(), isSelected) && option != gameSize) {
           m_game.setGameSize(option);
+          m_camera.reset();
         }
 
         if (isSelected) {

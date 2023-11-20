@@ -4,10 +4,10 @@
 #include "abcgOpenGL.hpp"
 
 #include "game.hpp"
-#include "camera.hpp"
 #include "snake.hpp"
 #include "apple.hpp"
 #include "ground.hpp"
+#include "camera.hpp"
 #include "util.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -30,17 +30,17 @@ private:
   GLint m_projectionMatrixLocation{};
   GLint m_colorLocation{};
 
-  Camera m_camera;
+  Game m_game;
+  Snake m_snake{m_game};
+  Apple m_apple{m_game};
+  Ground m_ground{m_game};
+
+  Camera m_camera{m_game};
   float m_pedestalSpeed{0.0f};
   float m_dollySpeed{0.0f};
   float m_truckSpeed{0.0f};
   float m_panSpeed{0.0f};
   float m_tiltSpeed{0.0f};
-
-  Game m_game;
-  Snake m_snake{m_game};
-  Apple m_apple{m_game};
-  Ground m_ground{m_game};
 };
 
 #endif

@@ -3,8 +3,12 @@
 
 #include "abcgOpenGL.hpp"
 
+#include "game.hpp"
+
 class Camera {
 public:
+  Camera(Game& game);
+
   void computeViewMatrix();
   glm::mat4 const &getViewMatrix() const;
 
@@ -20,7 +24,9 @@ public:
   void reset();
 
 private:
-  glm::vec3 m_eye{0.0f, 10.0f, 5.0f};
+  Game& m_game;
+
+  glm::vec3 m_eye{0.0f, 12.25f, 6.125f};
   glm::vec3 m_at{0.0f, 0.0f, 0.0f};
   glm::vec3 m_up{0.0f, 1.0f, 0.0f};
 

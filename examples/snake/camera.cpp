@@ -2,6 +2,10 @@
 
 #include "camera.hpp"
 
+Camera::Camera(Game& game) : m_game(game) {
+  reset();
+}
+
 void Camera::computeViewMatrix() {
   m_viewMatrix = glm::lookAt(m_eye, m_at, m_up);
 }
@@ -80,8 +84,17 @@ void Camera::tilt(float speed) {
 }
 
 void Camera::reset() {
-  m_eye = {0.0f, 10.0f, 5.0f};
-  m_at = {0.0f, 0.0f, 0.0f};
+  using enum GameSize;
+
+  auto const gameSize{m_game.getGameSize()};
+
+  if (gameSize == SMALL) {
+    m_eye = {0.0f, 10.0f, 5.0f};
+  } else if (gameSize == MEDIUM) {
+    m_eye = {0.0f, 12.25f, 6.125f};
+  } else {
+    m_eye = {0.0f, 14.5f, 7.25f};
+  }
 
   computeViewMatrix();
 }
