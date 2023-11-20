@@ -1,8 +1,15 @@
 #include "game.hpp"
 
 Game::Game() {
-  for (int x = -m_boardRadius; x <= m_boardRadius; x++) {
-    for (int z = -m_boardRadius; z <= m_boardRadius; z++) {
+  computeAllBoardPositions();
+}
+
+void Game::computeAllBoardPositions() {
+  auto const boardRadius{static_cast<int>(m_gameSize)};
+  m_allBoardPositions = {};
+
+  for (int x = -boardRadius; x <= boardRadius; x++) {
+    for (int z = -boardRadius; z <= boardRadius; z++) {
       glm::ivec3 boardPosition{x, 0, z};
       m_allBoardPositions.emplace_back(boardPosition);
     }
@@ -21,7 +28,7 @@ void Game::toggleGameState() {
 void Game::tick() {
   if (m_gameState == GameState::PAUSED) return;
 
-  if (m_timer.elapsed() < .25) return;
+  if (m_timer.elapsed() < 1.0f / static_cast<float>(m_gameSpeed)) return;
 
   m_timer.restart();
 
@@ -99,10 +106,12 @@ bool Game::hasEatenTheApple(glm::ivec3 nextSnakePosition) {
 }
 
 bool Game::hasLost(glm::ivec3 nextSnakePosition) {
-  auto const hasGoneOutOfBoard = nextSnakePosition.x > m_boardRadius ||
-                                 nextSnakePosition.x < -m_boardRadius ||
-                                 nextSnakePosition.z > m_boardRadius ||
-                                 nextSnakePosition.z < -m_boardRadius;
+  auto const boardRadius{static_cast<int>(m_gameSize)};
+
+  auto const hasGoneOutOfBoard = nextSnakePosition.x > boardRadius ||
+                                 nextSnakePosition.x < -boardRadius ||
+                                 nextSnakePosition.z > boardRadius ||
+                                 nextSnakePosition.z < -boardRadius;
 
   auto hasCrashedOnItself = false;
 
@@ -117,8 +126,22 @@ bool Game::hasLost(glm::ivec3 nextSnakePosition) {
   return hasGoneOutOfBoard || hasCrashedOnItself;
 }
 
-int Game::getBoardRadius() {
-  return m_boardRadius;
+GameSpeed Game::getGameSpeed() {
+  return m_gameSpeed;
+}
+
+void Game::setGameSpeed(GameSpeed gameSpeed) {
+  m_gameSpeed = gameSpeed;
+}
+
+GameSize Game::getGameSize() {
+  return m_gameSize;
+}
+
+void Game::setGameSize(GameSize gameSize) {
+  m_gameSize = gameSize;
+  computeAllBoardPositions();
+  reset();
 }
 
 GameState Game::getGameState() {

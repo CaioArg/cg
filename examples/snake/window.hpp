@@ -8,6 +8,7 @@
 #include "snake.hpp"
 #include "apple.hpp"
 #include "ground.hpp"
+#include "util.hpp"
 
 class Window : public abcg::OpenGLWindow {
 protected:

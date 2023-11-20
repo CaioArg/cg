@@ -32,7 +32,7 @@ void Ground::create(GLuint program) {
 void Ground::paint() const {
   abcg::glBindVertexArray(m_VAO);
 
-  auto const boardRadius{m_game.getBoardRadius()};
+  auto const boardRadius{static_cast<int>(m_game.getGameSize())};
 
   for (auto const z : iter::range(-boardRadius, boardRadius + 1)) {
     for (auto const x : iter::range(-boardRadius, boardRadius + 1)) {

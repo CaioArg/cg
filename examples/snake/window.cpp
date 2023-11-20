@@ -89,7 +89,79 @@ void Window::onEvent(SDL_Event const &event) {
   }
 }
 
-void Window::onPaintUI() {}
+void Window::onPaintUI() {
+  abcg::OpenGLWindow::onPaintUI();
+
+  if (m_game.getGameState() != GameState::PAUSED) return;
+
+  ImGui::SetNextWindowSize(ImVec2(300, 200));
+  ImGui::SetNextWindowPos(ImVec2((m_viewportSize.x / (m_viewportSize.x / 600) / 2) - 150, (m_viewportSize.y / (m_viewportSize.y / 600) / 2) - 100));
+
+  ImGuiWindowFlags windowFlags =
+      ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoMove |
+      ImGuiWindowFlags_NoCollapse |
+      ImGuiWindowFlags_NoScrollbar |
+      ImGuiWindowFlags_NoFocusOnAppearing;
+
+  ImGui::Begin("Snake", NULL, windowFlags);
+
+  {
+    using enum GameSpeed;
+    auto const gameSpeed{m_game.getGameSpeed()};
+
+    if (ImGui::BeginCombo("Speed", gameSpeedToString(gameSpeed).c_str())) {
+      for (auto const &option : {SLOW, MEDIUM, FAST}) {
+        auto const isSelected{option == gameSpeed};
+
+        if (ImGui::Selectable(gameSpeedToString(option).c_str(), isSelected) && option != gameSpeed) {
+          m_game.setGameSpeed(option);
+        }
+
+        if (isSelected) {
+          ImGui::SetItemDefaultFocus();
+        }
+      }
+
+      ImGui::EndCombo();
+    }
+  }
+
+  {
+    using enum GameSize;
+    auto const gameSize{m_game.getGameSize()};
+
+    if (ImGui::BeginCombo("Size", gameSizeToString(gameSize).c_str())) {
+      for (auto const &option : {SMALL, MEDIUM, LARGE}) {
+        auto const isSelected{option == gameSize};
+
+        if (ImGui::Selectable(gameSizeToString(option).c_str(), isSelected) && option != gameSize) {
+          m_game.setGameSize(option);
+        }
+
+        if (isSelected) {
+          ImGui::SetItemDefaultFocus();
+        }
+      }
+
+      ImGui::EndCombo();
+    }
+  }
+
+  {
+    if (ImGui::Button("Restart game")) {
+      m_game.reset();
+    }
+  }
+
+  {
+    if (ImGui::Button("Reset camera")) {
+      m_camera.reset();
+    }
+  }
+
+  ImGui::End();
+}
 
 void Window::onResize(glm::ivec2 const &size) {
   m_viewportSize = size;

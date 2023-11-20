@@ -6,12 +6,14 @@
 #include "abcgOpenGL.hpp"
 
 enum class GameState { PAUSED, PLAYING };
-
+enum class GameSpeed { SLOW = 2, MEDIUM = 4, FAST = 6 };
+enum class GameSize { SMALL = 4, MEDIUM = 5, LARGE = 6 };
 enum class Direction { UP, DOWN, LEFT, RIGHT };
 
 class Game {
 public:
   Game();
+  void computeAllBoardPositions();
   void toggleGameState();
   void tick();
   void updateSnakeDirection(Direction direction);
@@ -21,7 +23,10 @@ public:
   bool hasEatenTheApple(glm::ivec3 nexSnakePosition);
   bool hasLost(glm::ivec3 nexSnakePosition);
 
-  int getBoardRadius();
+  GameSpeed getGameSpeed();
+  void setGameSpeed(GameSpeed gameSpeed);
+  GameSize getGameSize();
+  void setGameSize(GameSize gameSize);
   GameState getGameState();
   bool getShouldAnimateAppleSpawning();
   void setShouldAnimateAppleSpawning(bool shouldAnimateAppleSpawning);
@@ -32,7 +37,9 @@ private:
   abcg::Timer m_timer;
   std::default_random_engine m_randomEngine;
 
-  int const m_boardRadius{5};
+  GameSpeed m_gameSpeed{GameSpeed::MEDIUM};
+  GameSize m_gameSize{GameSize::MEDIUM};
+
   std::vector<glm::ivec3> m_allBoardPositions{};
 
   GameState m_gameState{GameState::PLAYING};

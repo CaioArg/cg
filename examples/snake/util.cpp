@@ -63,3 +63,19 @@ std::tuple<std::vector<glm::vec3>, std::vector<GLuint>> loadModelFromFile(std::s
 
   return {glmVectors, indices};
 }
+
+std::string gameSpeedToString(GameSpeed gameSpeed) {
+  using enum GameSpeed;
+
+  if (gameSpeed == SLOW) return "Slow";
+  else if (gameSpeed == MEDIUM) return "Medium";
+  else return "Fast";
+}
+
+std::string gameSizeToString(GameSize gameSize) {
+  using enum GameSize;
+
+  if (gameSize == SMALL) return "Small";
+  else if (gameSize == MEDIUM) return "Medium";
+  else return "Large";
+}
