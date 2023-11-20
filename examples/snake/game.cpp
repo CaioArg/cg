@@ -132,6 +132,7 @@ GameSpeed Game::getGameSpeed() {
 
 void Game::setGameSpeed(GameSpeed gameSpeed) {
   m_gameSpeed = gameSpeed;
+  reset();
 }
 
 GameSize Game::getGameSize() {
