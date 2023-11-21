@@ -92,6 +92,8 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onPaintUI() {
   abcg::OpenGLWindow::onPaintUI();
 
+  ImGui::GetIO().WantCaptureKeyboard = false;
+
   {
     ImGui::SetNextWindowSize(ImVec2(250, 100));
     ImGui::SetNextWindowPos(ImVec2(20, 20));
@@ -132,8 +134,7 @@ void Window::onPaintUI() {
       ImGuiWindowFlags_NoMove |
       ImGuiWindowFlags_NoResize |
       ImGuiWindowFlags_NoCollapse |
-      ImGuiWindowFlags_NoScrollbar |
-      ImGuiWindowFlags_NoFocusOnAppearing
+      ImGuiWindowFlags_NoScrollbar
   };
 
   ImGui::Begin("Snake", nullptr, windowFlags);
