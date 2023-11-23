@@ -128,7 +128,10 @@ void Window::onPaintUI() {
   if (m_game.getGameState() != GameState::PAUSED) return;
 
   ImGui::SetNextWindowSize(ImVec2(300, 200));
-  ImGui::SetNextWindowPos(ImVec2((m_viewportSize.x / (m_viewportSize.x / 600) / 2) - 150, (m_viewportSize.y / (m_viewportSize.y / 600) / 2) - 100));
+  ImGui::SetNextWindowPos(ImVec2(
+      (m_viewportSize.x / m_dpr / 2) - 150,
+      (m_viewportSize.y / m_dpr / 2) - 100
+  ));
 
   auto const windowFlags{
       ImGuiWindowFlags_NoMove |
@@ -198,6 +201,13 @@ void Window::onPaintUI() {
 }
 
 void Window::onResize(glm::ivec2 const &size) {
+  static auto isInitialRender{true};
+
+  if (isInitialRender) {
+    m_dpr = size.x / 600;
+    isInitialRender = false;
+  }
+
   m_viewportSize = size;
   m_camera.computeProjectionMatrix(size);
 }

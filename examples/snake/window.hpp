@@ -22,6 +22,7 @@ protected:
 
 private:
   glm::ivec2 m_viewportSize{};
+  int m_dpr{};
 
   GLuint m_program{};
 
