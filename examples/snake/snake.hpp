@@ -8,10 +8,10 @@
 class Snake {
 public:
   Snake(Game& game) : m_game(game) {}
-
   void create(GLuint program);
   void paint() const;
   void destroy();
+  std::tuple<float, float, float> getSnakeColor(unsigned long position, unsigned long snakeSize) const;
 
 private:
   Game& m_game;
@@ -44,6 +44,9 @@ private:
       3, 2, 6,
       6, 7, 3,
   };
+
+  std::tuple<int, int, int> const m_headColor{200, 195, 0};
+  std::tuple<int, int, int> const m_tailColor{170, 165, 0};
 
   GLint m_modelMatrixLocation{};
   GLint m_colorLocation{};
