@@ -8,8 +8,8 @@ void Window::onCreate() {
   abcg::glEnable(GL_DEPTH_TEST);
 
   m_program = abcg::createOpenGLProgram({
-      {.source = assetsPath + "main.vert", .stage = abcg::ShaderStage::Vertex},
-      {.source = assetsPath + "main.frag", .stage = abcg::ShaderStage::Fragment},
+      {.source = assetsPath + "shaders/main.vert", .stage = abcg::ShaderStage::Vertex},
+      {.source = assetsPath + "shaders/main.frag", .stage = abcg::ShaderStage::Fragment},
   });
 
   m_snake.create(m_program);

@@ -7,7 +7,7 @@ void Apple::create(GLuint program) {
   m_modelMatrixLocation = abcg::glGetUniformLocation(program, "modelMatrix");
   m_colorLocation = abcg::glGetUniformLocation(program, "color");
 
-  auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "apple.obj");
+  auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "/models/apple.obj");
   m_vertices = vertices;
   m_indices = indices;
 
