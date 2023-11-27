@@ -5,7 +5,15 @@
 
 #include "game.hpp"
 
-std::tuple<std::vector<glm::vec3>, std::vector<GLuint>> loadModelFromFile(std::string_view path);
+struct Vertex {
+  glm::vec3 position{};
+  glm::vec3 normal{};
+  glm::vec2 texCoord{};
+
+  friend bool operator==(Vertex const &, Vertex const &) = default;
+};
+
+std::tuple<std::vector<Vertex>, std::vector<GLuint>> loadModelFromFile(std::string_view path);
 
 std::string gameSpeedToString(GameSpeed gameSpeed);
 

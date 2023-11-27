@@ -2,20 +2,16 @@
 
 #include "util.hpp"
 
-struct Vertex {
-  glm::vec3 position{};
-
-  friend bool operator==(Vertex const &, Vertex const &) = default;
-};
-
 template <> struct std::hash<Vertex> {
   size_t operator()(Vertex const &vertex) const noexcept {
     auto const h1{std::hash<glm::vec3>()(vertex.position)};
-    return h1;
+    auto const h2{std::hash<glm::vec3>()(vertex.normal)};
+    auto const h3{std::hash<glm::vec2>()(vertex.texCoord)};
+    return abcg::hashCombine(h1, h2, h3);
   }
 };
 
-std::tuple<std::vector<glm::vec3>, std::vector<GLuint>> loadModelFromFile(std::string_view path) {
+std::tuple<std::vector<Vertex>, std::vector<GLuint>> loadModelFromFile(std::string_view path) {
   tinyobj::ObjReader reader;
 
   if (!reader.ParseFromFile(path.data())) {
@@ -41,12 +37,27 @@ std::tuple<std::vector<glm::vec3>, std::vector<GLuint>> loadModelFromFile(std::s
     for (auto const offset : iter::range(shape.mesh.indices.size())) {
       auto const index{shape.mesh.indices.at(offset)};
 
-      auto const startIndex{3 * index.vertex_index};
-      auto const vx{attributes.vertices.at(startIndex + 0)};
-      auto const vy{attributes.vertices.at(startIndex + 1)};
-      auto const vz{attributes.vertices.at(startIndex + 2)};
+      auto const vertexStartIndex{3 * index.vertex_index};
+      glm::vec3 position{
+          attributes.vertices.at(vertexStartIndex + 0),
+          attributes.vertices.at(vertexStartIndex + 1),
+          attributes.vertices.at(vertexStartIndex + 2),
+      };
 
-      Vertex const vertex{.position = {vx, vy, vz}};
+      auto const normalStartIndex{3 * index.normal_index};
+      glm::vec3 normal{
+          attributes.normals.at(normalStartIndex + 0),
+          attributes.normals.at(normalStartIndex + 1),
+          attributes.normals.at(normalStartIndex + 2),
+      };
+
+      auto const texCoordStartIndex{2 * index.texcoord_index};
+      glm::vec2 texCoord{
+          attributes.texcoords.at(texCoordStartIndex + 0),
+          attributes.texcoords.at(texCoordStartIndex + 1),
+      };
+
+      Vertex const vertex{.position = position, .normal = normal, .texCoord = texCoord};
 
       if (!hash.contains(vertex)) {
         hash[vertex] = vertices.size();
@@ -57,11 +68,7 @@ std::tuple<std::vector<glm::vec3>, std::vector<GLuint>> loadModelFromFile(std::s
     }
   }
 
-  std::vector<glm::vec3> glmVectors;
-
-  for (auto const &vertex : vertices) glmVectors.push_back(vertex.position);
-
-  return {glmVectors, indices};
+  return {vertices, indices};
 }
 
 std::string gameSpeedToString(GameSpeed gameSpeed) {

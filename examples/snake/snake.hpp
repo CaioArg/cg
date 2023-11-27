@@ -4,10 +4,11 @@
 #include "abcgOpenGL.hpp"
 
 #include "game.hpp"
+#include "camera.hpp"
 
 class Snake {
 public:
-  Snake(Game& game) : m_game(game) {}
+  Snake(Game& game, Camera& camera) : m_game(game), m_camera(camera) {}
   void create(GLuint program);
   void paint() const;
   void destroy();
@@ -15,7 +16,9 @@ public:
 
 private:
   Game& m_game;
+  Camera& m_camera;
 
+  GLuint m_program{};
   GLuint m_VBO{};
   GLuint m_EBO{};
   GLuint m_VAO{};
@@ -48,6 +51,8 @@ private:
   std::tuple<int, int, int> const m_headColor{200, 195, 0};
   std::tuple<int, int, int> const m_tailColor{170, 165, 0};
 
+  GLint m_viewMatrixLocation{};
+  GLint m_projectionMatrixLocation{};
   GLint m_modelMatrixLocation{};
   GLint m_colorLocation{};
 };

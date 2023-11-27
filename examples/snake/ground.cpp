@@ -1,6 +1,10 @@
 #include "ground.hpp"
 
 void Ground::create(GLuint program) {
+  m_program = program;
+
+  m_viewMatrixLocation = abcg::glGetUniformLocation(program, "viewMatrix");
+  m_projectionMatrixLocation = abcg::glGetUniformLocation(program, "projectionMatrix");
   m_modelMatrixLocation = abcg::glGetUniformLocation(program, "modelMatrix");
   m_colorLocation = abcg::glGetUniformLocation(program, "color");
 
@@ -30,6 +34,11 @@ void Ground::create(GLuint program) {
 }
 
 void Ground::paint() const {
+  abcg::glUseProgram(m_program);
+
+  abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+  abcg::glUniformMatrix4fv(m_projectionMatrixLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+
   abcg::glBindVertexArray(m_VAO);
 
   auto const boardRadius{static_cast<int>(m_game.getGameSize())};
@@ -49,6 +58,8 @@ void Ground::paint() const {
   }
 
   abcg::glBindVertexArray(0);
+
+  abcg::glUseProgram(0);
 }
 
 void Ground::destroy() {

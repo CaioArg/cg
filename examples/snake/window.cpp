@@ -12,14 +12,14 @@ void Window::onCreate() {
       {.source = assetsPath + "shaders/main.frag", .stage = abcg::ShaderStage::Fragment},
   });
 
-  m_snake.create(m_program);
-  m_apple.create(m_program);
-  m_ground.create(m_program);
+  m_apple_program = abcg::createOpenGLProgram({
+      {.source = assetsPath + "shaders/apple.vert", .stage = abcg::ShaderStage::Vertex},
+      {.source = assetsPath + "shaders/apple.frag", .stage = abcg::ShaderStage::Fragment},
+  });
 
-  m_viewMatrixLocation = abcg::glGetUniformLocation(m_program, "viewMatrix");
-  m_projectionMatrixLocation = abcg::glGetUniformLocation(m_program, "projectionMatrix");
-  m_modelMatrixLocation = abcg::glGetUniformLocation(m_program, "modelMatrix");
-  m_colorLocation = abcg::glGetUniformLocation(m_program, "color");
+  m_snake.create(m_program);
+  m_apple.create(m_apple_program);
+  m_ground.create(m_program);
 }
 
 void Window::onUpdate() {
@@ -39,16 +39,9 @@ void Window::onPaint() {
 
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 
-  abcg::glUseProgram(m_program);
-
-  abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
-  abcg::glUniformMatrix4fv(m_projectionMatrixLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
-
   m_snake.paint();
   m_apple.paint((float) getDeltaTime());
   m_ground.paint();
-
-  abcg::glUseProgram(0);
 }
 
 void Window::onEvent(SDL_Event const &event) {

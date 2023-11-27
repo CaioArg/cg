@@ -18,6 +18,10 @@ std::tuple<float, float, float> Snake::getSnakeColor(unsigned long position, uns
 }
 
 void Snake::create(GLuint program) {
+  m_program = program;
+
+  m_viewMatrixLocation = abcg::glGetUniformLocation(program, "viewMatrix");
+  m_projectionMatrixLocation = abcg::glGetUniformLocation(program, "projectionMatrix");
   m_modelMatrixLocation = abcg::glGetUniformLocation(program, "modelMatrix");
   m_colorLocation = abcg::glGetUniformLocation(program, "color");
 
@@ -47,6 +51,11 @@ void Snake::create(GLuint program) {
 }
 
 void Snake::paint() const {
+  abcg::glUseProgram(m_program);
+
+  abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+  abcg::glUniformMatrix4fv(m_projectionMatrixLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+
   abcg::glBindVertexArray(m_VAO);
 
   auto const snakePositions{m_game.getSnakePositions()};
@@ -66,6 +75,8 @@ void Snake::paint() const {
   }
 
   abcg::glBindVertexArray(0);
+
+  abcg::glUseProgram(0);
 }
 
 void Snake::destroy() {
