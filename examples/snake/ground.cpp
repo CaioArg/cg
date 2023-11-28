@@ -3,11 +3,6 @@
 void Ground::create(GLuint program) {
   m_program = program;
 
-  m_viewMatrixLocation = abcg::glGetUniformLocation(program, "viewMatrix");
-  m_projectionMatrixLocation = abcg::glGetUniformLocation(program, "projectionMatrix");
-  m_modelMatrixLocation = abcg::glGetUniformLocation(program, "modelMatrix");
-  m_colorLocation = abcg::glGetUniformLocation(program, "color");
-
   abcg::glGenBuffers(1, &m_VBO);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices.at(0)) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
@@ -36,8 +31,8 @@ void Ground::create(GLuint program) {
 void Ground::paint() const {
   abcg::glUseProgram(m_program);
 
-  abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
-  abcg::glUniformMatrix4fv(m_projectionMatrixLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+  abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "viewMatrix"), 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+  abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "projectionMatrix"), 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
 
   abcg::glBindVertexArray(m_VAO);
 
@@ -48,10 +43,10 @@ void Ground::paint() const {
       glm::mat4 model{1.0f};
       model = glm::translate(model, glm::vec3(x, 0.125f, z));
       model = glm::scale(model, glm::vec3(1.0f, 0.25f, 1.0f));
-      abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
+      abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "modelMatrix"), 1, GL_FALSE, &model[0][0]);
 
       auto const i{(z + x) % 2 == 0 ? 1.0f : 0.85f};
-      abcg::glUniform4f(m_colorLocation, 0.39f * i, 0.78f * i, 0.29f * i, 1.0f);
+      abcg::glUniform4f(abcg::glGetUniformLocation(m_program, "color"), 0.39f * i, 0.78f * i, 0.29f * i, 1.0f);
 
       abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     }

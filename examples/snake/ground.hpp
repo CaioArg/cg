@@ -46,11 +46,6 @@ private:
       3, 2, 6,
       6, 7, 3,
   };
-
-  GLint m_viewMatrixLocation{};
-  GLint m_projectionMatrixLocation{};
-  GLint m_modelMatrixLocation{};
-  GLint m_colorLocation{};
 };
 
 #endif

@@ -50,11 +50,6 @@ private:
 
   std::tuple<int, int, int> const m_headColor{200, 195, 0};
   std::tuple<int, int, int> const m_tailColor{170, 165, 0};
-
-  GLint m_viewMatrixLocation{};
-  GLint m_projectionMatrixLocation{};
-  GLint m_modelMatrixLocation{};
-  GLint m_colorLocation{};
 };
 
 #endif
