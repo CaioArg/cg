@@ -48,8 +48,8 @@ private:
       6, 7, 3,
   };
 
-  std::tuple<int, int, int> const m_headColor{200, 195, 0};
-  std::tuple<int, int, int> const m_tailColor{170, 165, 0};
+  std::tuple<int, int, int> const m_headColor{77, 124, 246};
+  std::tuple<int, int, int> const m_tailColor{65, 80, 228};
 };
 
 #endif
