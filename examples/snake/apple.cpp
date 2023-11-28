@@ -1,11 +1,11 @@
 #include <math.h>
 
 #include "apple.hpp"
-#include "util.hpp"
 
 void Apple::create(GLuint program) {
-  m_modelMatrixLocation = abcg::glGetUniformLocation(program, "modelMatrix");
-  m_colorLocation = abcg::glGetUniformLocation(program, "color");
+  m_program = program;
+
+  m_diffuseTexture = abcg::loadOpenGLTexture({.path = abcg::Application::getAssetsPath() + "/textures/Apple_BaseColor.png"});
 
   auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "/models/apple.obj");
   m_vertices = vertices;
@@ -26,9 +26,19 @@ void Apple::create(GLuint program) {
   abcg::glBindVertexArray(m_VAO);
 
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  auto const positionAttribute{abcg::glGetAttribLocation(program, "inPosition")};
+
+  auto const positionAttribute{abcg::glGetAttribLocation(m_program, "inPosition")};
   abcg::glEnableVertexAttribArray(positionAttribute);
-  abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+  abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+
+  auto const normalAttribute{abcg::glGetAttribLocation(m_program, "inNormal")};
+  abcg::glEnableVertexAttribArray(normalAttribute);
+  abcg::glVertexAttribPointer(normalAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, normal)));
+
+  auto const texCoordAttribute{abcg::glGetAttribLocation(m_program, "inTexCoord")};
+  abcg::glEnableVertexAttribArray(texCoordAttribute);
+  abcg::glVertexAttribPointer(texCoordAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, texCoord)));
+
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
@@ -41,19 +51,50 @@ void Apple::paint(float deltaTime) {
 
   auto const applePosition{m_game.getApplePosition()};
 
-  abcg::glBindVertexArray(m_VAO);
+  auto const viewMatrix{m_camera.getViewMatrix()};
+  auto const projectionMatrix{m_camera.getProjectionMatrix()};
 
   glm::mat4 model{1.0f};
   model = glm::translate(model, glm::vec3(applePosition.x, 0.750f + m_appleAnimationTranslation, applePosition.z));
   model = glm::rotate(model, m_appleAnimationRotation, {0.0f, 1.0f, 0.0f});
   model = glm::scale(model, m_appleAnimationScale * glm::vec3(0.01f));
 
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.90f, 0.27f, 0.11f, 1.0f);
+  auto const normalMatrix{glm::inverseTranspose(glm::mat3(viewMatrix * model))};
+
+  abcg::glUseProgram(m_program);
+
+  abcg::glBindVertexArray(m_VAO);
+
+  abcg::glActiveTexture(GL_TEXTURE0);
+  abcg::glBindTexture(GL_TEXTURE_2D, m_diffuseTexture);
+
+  abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "viewMatrix"), 1, GL_FALSE, &viewMatrix[0][0]);
+  abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "projectionMatrix"), 1, GL_FALSE, &projectionMatrix[0][0]);
+  abcg::glUniformMatrix4fv(abcg::glGetUniformLocation(m_program, "modelMatrix"), 1, GL_FALSE, &model[0][0]);
+  abcg::glUniformMatrix3fv(abcg::glGetUniformLocation(m_program, "normalMatrix"), 1, GL_FALSE, &normalMatrix[0][0]);
+
+  abcg::glUniform1i(abcg::glGetUniformLocation(m_program, "diffuseTex"), 0);
+
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "lightDirWorldSpace"), 1, &m_lightDir.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Ia"), 1, &m_Ia.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Id"), 1, &m_Id.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Is"), 1, &m_Is.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Ka"), 1, &m_Ka.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Kd"), 1, &m_Kd.x);
+  abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Ks"), 1, &m_Ks.x);
+  abcg::glUniform1f(abcg::glGetUniformLocation(m_program, "shininess"), m_shininess);
 
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);
+
+  abcg::glUseProgram(0);
 }
 
 void Apple::updateAppleAnimation(float deltaTime) {
@@ -84,6 +125,7 @@ void Apple::updateAppleAnimation(float deltaTime) {
 }
 
 void Apple::destroy() {
+  abcg::glDeleteTextures(1, &m_diffuseTexture);
   abcg::glDeleteBuffers(1, &m_VBO);
   abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteVertexArrays(1, &m_VAO);
