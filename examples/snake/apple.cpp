@@ -5,9 +5,9 @@
 void Apple::create(GLuint program) {
   m_program = program;
 
-  m_diffuseTexture = abcg::loadOpenGLTexture({.path = abcg::Application::getAssetsPath() + "/textures/Apple_BaseColor.png"});
+  m_diffuseTexture = abcg::loadOpenGLTexture({.path = abcg::Application::getAssetsPath() + "maps/Apple_BaseColor.png"});
 
-  auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "/models/apple.obj");
+  auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "models/apple.obj");
   m_vertices = vertices;
   m_indices = indices;
 

@@ -8,6 +8,7 @@
 #include "snake.hpp"
 #include "apple.hpp"
 #include "ground.hpp"
+#include "skybox.hpp"
 #include "util.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -26,6 +27,7 @@ private:
 
   GLuint m_program{};
   GLuint m_apple_program{};
+  GLuint m_skybox_program{};
 
   Game m_game;
 
@@ -39,6 +41,7 @@ private:
   Snake m_snake{m_game, m_camera};
   Apple m_apple{m_game, m_camera};
   Ground m_ground{m_game, m_camera};
+  Skybox m_skybox{m_camera};
 };
 
 #endif

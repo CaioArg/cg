@@ -17,9 +17,15 @@ void Window::onCreate() {
       {.source = assetsPath + "shaders/apple.frag", .stage = abcg::ShaderStage::Fragment},
   });
 
+  m_skybox_program = abcg::createOpenGLProgram({
+      {.source = assetsPath + "shaders/skybox.vert", .stage = abcg::ShaderStage::Vertex},
+      {.source = assetsPath + "shaders/skybox.frag", .stage = abcg::ShaderStage::Fragment},
+  });
+
   m_snake.create(m_program);
   m_apple.create(m_apple_program);
   m_ground.create(m_program);
+  m_skybox.create(m_skybox_program);
 }
 
 void Window::onUpdate() {
@@ -42,6 +48,7 @@ void Window::onPaint() {
   m_snake.paint();
   m_apple.paint((float) getDeltaTime());
   m_ground.paint();
+  m_skybox.paint();
 }
 
 void Window::onEvent(SDL_Event const &event) {
@@ -209,6 +216,9 @@ void Window::onDestroy() {
   m_snake.destroy();
   m_apple.destroy();
   m_ground.destroy();
+  m_skybox.destroy();
 
   abcg::glDeleteProgram(m_program);
+  abcg::glDeleteProgram(m_apple_program);
+  abcg::glDeleteProgram(m_skybox_program);
 }
