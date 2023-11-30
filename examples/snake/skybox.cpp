@@ -3,7 +3,7 @@
 void Skybox::create(GLuint program) {
   m_program = program;
 
-  auto const cubeMapPath{abcg::Application::getAssetsPath() + "maps/green-field-cubemap/"};
+  auto const cubeMapPath{abcg::Application::getAssetsPath() + "maps/top-of-mountain-cubemap/"};
 
   m_cubeTexture = abcg::loadOpenGLCubemap({.paths = {
      cubeMapPath + "posx.jpg",
@@ -11,7 +11,7 @@ void Skybox::create(GLuint program) {
      cubeMapPath + "posy.jpg",
      cubeMapPath + "negy.jpg",
      cubeMapPath + "posz.jpg",
-     cubeMapPath + "negz.jpg"
+     cubeMapPath + "negz.jpg",
  }});
 
   abcg::glGenBuffers(1, &m_VBO);
