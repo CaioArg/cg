@@ -50,3 +50,41 @@ a maçã, uma nova maçã é criada aleatóriamente através do método respawnA
 Essas classes são responsáveis por renderizar a cobra, a maçã e o chão, respectivamente. Cada uma gerência seus próprios
 VBOs, EBOs e VAOs, além de implementar uma matriz de modelo própria, a partir dos dados do estado atual do jogo recuperado
 através da instância de game que cada uma possui.
+
+## Projeto 3: "Snake" aprimorado
+
+Este projeto é um aprimoramento do projeto "Snake". Toda a documentação do projeto "Snake" continua válida, com as adições
+descritas nesta seção.
+
+### Menu de pause
+
+Foi adicionada a opção de pausar/despausar o jogo pressionando a tecla esc. O estado de pause é armazenado na classe `Game`
+na variável `m_gameState`, do tipo enum class `GameState`. No menu que aparece quando o jogo está pausado, é possível realizar
+as seguintes configurações que antes não eram possíveis: resetar a câmera para sua posição inicial, reiniciar o jogo, alterar
+o tamanho do chão do jogo, e alterar a velocidade da cobra. Existem 3 opções de tamanho de chão e de velocidade pré definidas
+para o usuário escolher, e esses valores são armazenados na classe `Game` nas variáveis `m_gameSpeed` e `m_gameSize`, cada
+uma com o seu tipo enum class correspondente (`GameSpeed`/`GameSize`).
+
+### Exibição de pontuação
+
+A pontuação do usuário agora é exibida no canto superior esquerdo da janela. Ela é computada diretamente a partir do tamanho
+atual da cobra, refletindo a quantidade de maçãs que a cobra comeu. Também é exibida a pontuação máxima que o jogador já alcançou,
+valor que é retido na variável estática `bestScore` no metodo `Window::onPaintUI`.
+
+### Degradê aplicado na cobra
+
+A cobra agora é renderizada com cores diferentes ao longo do seu corpo. A cor de seu início e fim sempre são fixas,
+e a cor de cada seção intermediária é obtida a partir da interpolação das cores das extremidades. Assim é possível saber
+qual foi o percurso feito por ela com mais facilidade, pois antes cada seção dela era indistinguível, o que não permitia
+saber seu percurso.
+
+### Textura e iluminação aplicadas na maçã
+
+// TODO
+
+### Adição de um skybox no jogo
+
+Foi adicionado um skybox no jogo para preencher o plano de fundo, que antes era monocromático. O gerenciamento do skybox
+é feito pela classe `Skybox`, que gerencia seu próprio VBO e VAO, além de ser responsável por carregar a textura cubemap
+utilizada. A classe também é responsável por utilizar os shaders skybox.vert e skybox.frag, que realizam o mapeamento da
+textura do skybox.
