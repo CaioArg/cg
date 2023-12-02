@@ -80,7 +80,10 @@ saber seu percurso.
 
 ### Textura e iluminação aplicadas na maçã
 
-// TODO
+Agora a maçã utiliza shaders próprios para sua renderização: apple.vert e apple.frag. Esses shaders são responsáveis por 
+aplicar iluminação e texturização na maçã. O modelo de reflexão utilizado é o de Blinn-Phong com o modelo de sombreamento de Phong,
+e os coeficientes utilizados são definidos como variáveis de `Apple`. A maçã recebe duas texturas: normal e difusa, sendo
+que ambas são armazenadas em suas respectivas variáveis de `Apple`: `m_normalTexture` e `m_difuseTexture`.
 
 ### Adição de um skybox no jogo
 
