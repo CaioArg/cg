@@ -3,28 +3,33 @@
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec2 inTexCoord;
+layout(location = 3) in vec4 inTangent;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform mat3 normalMatrix;
 
 uniform vec4 lightDirWorldSpace;
 
-out vec3 fragV;
-out vec3 fragL;
-out vec3 fragN;
 out vec2 fragTexCoord;
+out vec3 fragTObj;
+out vec3 fragBObj;
+out vec3 fragNObj;
+out vec3 fragLEye;
+out vec3 fragVEye;
 
 void main() {
-  vec3 P = (viewMatrix * modelMatrix * vec4(inPosition, 1.0)).xyz;
-  vec3 N = normalMatrix * inNormal;
-  vec3 L = -(viewMatrix * lightDirWorldSpace).xyz;
+  vec3 PEye = (viewMatrix * modelMatrix * vec4(inPosition, 1.0)).xyz;
+  vec3 LEye = -(viewMatrix * lightDirWorldSpace).xyz;
 
-  fragL = L;
-  fragV = -P;
-  fragN = N;
   fragTexCoord = inTexCoord;
 
-  gl_Position = projectionMatrix * vec4(P, 1.0);
+  fragTObj = inTangent.xyz;
+  fragBObj = inTangent.w * cross(inNormal, inTangent.xyz);
+  fragNObj = inNormal;
+
+  fragLEye = LEye;
+  fragVEye = -PEye;
+
+  gl_Position = projectionMatrix * vec4(PEye, 1.0);
 }

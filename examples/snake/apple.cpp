@@ -6,6 +6,7 @@ void Apple::create(GLuint program) {
   m_program = program;
 
   m_diffuseTexture = abcg::loadOpenGLTexture({.path = abcg::Application::getAssetsPath() + "maps/Apple_BaseColor.png"});
+  m_normalTexture = abcg::loadOpenGLTexture({.path = abcg::Application::getAssetsPath() + "maps/Apple_Normal.png"});
 
   auto const [vertices, indices] = loadModelFromFile(abcg::Application::getAssetsPath() + "models/apple.obj");
   m_vertices = vertices;
@@ -39,6 +40,10 @@ void Apple::create(GLuint program) {
   abcg::glEnableVertexAttribArray(texCoordAttribute);
   abcg::glVertexAttribPointer(texCoordAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, texCoord)));
 
+  auto const tangentAttribute{abcg::glGetAttribLocation(m_program, "inTangent")};
+  abcg::glEnableVertexAttribArray(tangentAttribute);
+  abcg::glVertexAttribPointer(tangentAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, tangent)));
+
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
@@ -68,6 +73,9 @@ void Apple::paint(float deltaTime) {
   abcg::glActiveTexture(GL_TEXTURE0);
   abcg::glBindTexture(GL_TEXTURE_2D, m_diffuseTexture);
 
+  abcg::glActiveTexture(GL_TEXTURE1);
+  abcg::glBindTexture(GL_TEXTURE_2D, m_normalTexture);
+
   abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   abcg::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -80,6 +88,7 @@ void Apple::paint(float deltaTime) {
   abcg::glUniformMatrix3fv(abcg::glGetUniformLocation(m_program, "normalMatrix"), 1, GL_FALSE, &normalMatrix[0][0]);
 
   abcg::glUniform1i(abcg::glGetUniformLocation(m_program, "diffuseTex"), 0);
+  abcg::glUniform1i(abcg::glGetUniformLocation(m_program, "normalTex"), 1);
 
   abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "lightDirWorldSpace"), 1, &m_lightDir.x);
   abcg::glUniform4fv(abcg::glGetUniformLocation(m_program, "Ia"), 1, &m_Ia.x);

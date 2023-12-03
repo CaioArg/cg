@@ -21,6 +21,7 @@ private:
 
   GLuint m_program{};
   GLuint m_diffuseTexture{};
+  GLuint m_normalTexture{};
   GLuint m_VBO{};
   GLuint m_EBO{};
   GLuint m_VAO{};

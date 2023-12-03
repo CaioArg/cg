@@ -9,6 +9,7 @@ struct Vertex {
   glm::vec3 position{};
   glm::vec3 normal{};
   glm::vec2 texCoord{};
+  glm::vec4 tangent{};
 
   friend bool operator==(Vertex const &, Vertex const &) = default;
 };

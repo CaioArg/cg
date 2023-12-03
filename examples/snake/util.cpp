@@ -68,6 +68,58 @@ std::tuple<std::vector<Vertex>, std::vector<GLuint>> loadModelFromFile(std::stri
     }
   }
 
+  std::vector bitangents(vertices.size(), glm::vec3(0));
+
+  for (auto const offset : iter::range(0UL, indices.size(), 3UL)) {
+    auto const i1{indices.at(offset + 0)};
+    auto const i2{indices.at(offset + 1)};
+    auto const i3{indices.at(offset + 2)};
+
+    auto &v1{vertices.at(i1)};
+    auto &v2{vertices.at(i2)};
+    auto &v3{vertices.at(i3)};
+
+    auto const e1{v2.position - v1.position};
+    auto const e2{v3.position - v1.position};
+    auto const delta1{v2.texCoord - v1.texCoord};
+    auto const delta2{v3.texCoord - v1.texCoord};
+
+    glm::mat2 M;
+    M[0][0] = delta2.t;
+    M[0][1] = -delta1.t;
+    M[1][0] = -delta2.s;
+    M[1][1] = delta1.s;
+    M *= (1.0f / (delta1.s * delta2.t - delta2.s * delta1.t));
+
+    auto const tangent{glm::vec4(M[0][0] * e1.x + M[0][1] * e2.x,
+                                 M[0][0] * e1.y + M[0][1] * e2.y,
+                                 M[0][0] * e1.z + M[0][1] * e2.z, 0.0f)};
+
+    auto const bitangent{glm::vec3(M[1][0] * e1.x + M[1][1] * e2.x,
+                                   M[1][0] * e1.y + M[1][1] * e2.y,
+                                   M[1][0] * e1.z + M[1][1] * e2.z)};
+
+    v1.tangent += tangent;
+    v2.tangent += tangent;
+    v3.tangent += tangent;
+
+    bitangents.at(i1) += bitangent;
+    bitangents.at(i2) += bitangent;
+    bitangents.at(i3) += bitangent;
+  }
+
+  for (auto &&[i, vertex] : iter::enumerate(vertices)) {
+    auto const &n{vertex.normal};
+    auto const &t{glm::vec3(vertex.tangent)};
+
+    auto const tangent{t - n * glm::dot(n, t)};
+    vertex.tangent = glm::vec4(glm::normalize(tangent), 0);
+
+    auto const b{glm::cross(n, t)};
+    auto const handedness{glm::dot(b, bitangents.at(i))};
+    vertex.tangent.w = (handedness < 0.0f) ? -1.0f : 1.0f;
+  }
+
   return {vertices, indices};
 }
 
