@@ -107,6 +107,8 @@ void Apple::paint(float deltaTime) {
 }
 
 void Apple::updateAppleAnimation(float deltaTime) {
+  if (m_game.getGameState() != GameState::PLAYING) return;
+
   m_appleAnimationRotation += 2 * M_PI * deltaTime;
 
   if (m_game.getShouldAnimateAppleSpawning()) {
